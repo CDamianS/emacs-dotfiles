@@ -70,6 +70,9 @@
   (global-visual-line-mode t)
   (setq display-line-numbers-type 'relative)
 
+(setq scroll-step            1
+      scroll-conservatively  10000)
+
 (straight-use-package 'catppuccin-theme)
 (load-theme 'catppuccin :no-confirm)
 (setq catppuccin-flavor 'latte) ;; or 'frappe, 'macchiato, or 'mocha
@@ -153,8 +156,7 @@
 
 (use-package vterm
 :config
-(setq shell-file-name "/bin/zsh"
-      vterm-max-scrollback 5000))
+(setq vterm-shell "/bin/zsh"))
 
 (use-package vterm-toggle
   :after vterm
@@ -174,8 +176,6 @@
                   ;;(dedicated . t) ;dedicated is supported in emacs27
                   (reusable-frames . visible)
                   (window-height . 0.3))))
-
-(use-package magit)
 
 (use-package counsel
   :after ivy
@@ -209,6 +209,8 @@
   (ivy-set-display-transformer 'ivy-switch-buffer
                                'ivy-rich-switch-buffer-transformer))
 
+(use-package magit)
+
 (use-package toc-org
   :commands toc-org-enable
   :init (add-hook 'org-mode-hook 'toc-org-enable))
@@ -221,6 +223,9 @@
 (setq org-src-preserve-indentation t)
 
 (require 'org-tempo)
+
+(use-package rainbow-mode
+    :hook org-mode prog-mode)
 
 (use-package sudo-edit
     :config

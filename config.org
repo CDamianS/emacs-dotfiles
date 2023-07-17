@@ -16,9 +16,10 @@
 - [[#configurations][Configurations]]
   - [[#shells][Shells]]
 - [[#more-plugins][More Plugins!!]]
-  - [[#magit][Magit]]
   - [[#ivy][Ivy]]
+  - [[#magit][Magit]]
   - [[#org-mode][Org-Mode]]
+  - [[#rainbow-mode][Rainbow mode]]
   - [[#sudo-edit][Sudo-edit]]
   - [[#which-key][Which-key]]
 
@@ -138,6 +139,13 @@ relative numbers or bust
   (setq display-line-numbers-type 'relative)
 #+END_SRC
 
+*** Smooth scrolling
+who needs C-v
+#+begin_src emacs-lisp
+(setq scroll-step            1
+      scroll-conservatively  10000)
+#+end_src
+
 *** Colorscheme
 catppuccin is fun
 #+BEGIN_SRC emacs-lisp
@@ -233,12 +241,12 @@ other keybinds may be on their specific configs
       eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
 #+end_src
 *** Vterm
-The best terminal :o
+The best terminal 
+you can probably use shell-file-name but it was bugged for me :o
 #+begin_src emacs-lisp
 (use-package vterm
 :config
-(setq shell-file-name "/bin/zsh"
-      vterm-max-scrollback 5000))
+(setq vterm-shell "/bin/zsh"))
 #+end_src
 *** Vterm-Toggle
 #+begin_src emacs-lisp
@@ -265,16 +273,8 @@ The best terminal :o
 * More Plugins!!
 Because that's the emacs experience
 
-** Magit
-git has never been easier
-*** Installation and config
-#+begin_src emacs-lisp
-(use-package magit)
-#+end_src
-
 ** Ivy 
 Automated lazyness
-
 #+begin_src emacs-lisp
 (use-package counsel
   :after ivy
@@ -309,6 +309,13 @@ Automated lazyness
                                'ivy-rich-switch-buffer-transformer))
 #+end_src
 
+** Magit
+git has never been easier
+*** Installation and config
+#+begin_src emacs-lisp
+(use-package magit)
+#+end_src
+
 ** Org-Mode
 Making life simple and avoiding unorganized crime
 *** Enabling table of contents
@@ -339,6 +346,13 @@ like emmet but good
 (require 'org-tempo)
 #+END_SRC
 
+** Rainbow mode
+pride flags galore
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+    :hook org-mode prog-mode)
+#+end_src
+ 
 ** Sudo-edit
 what's the magic word to get what you want?
 #+begin_src emacs-lisp

@@ -41,7 +41,9 @@ A list of the currently used packages:
 - Ivy
 - Magit
 - All the icons
-  
+- [[https://github.com/akermu/emacs-libvterm][Vterm]] - Terminal emulator (set to zsh)
+- Rainbow Mode
+
 ** Keybinds
 Pretty much the standard evil keybinds plus some emacs stuff
 
