@@ -3,9 +3,11 @@
 #+description: now in org mode!!
 #+startup: showeverything
 #+options: toc:2
+Currently a WIP, my personal config for GNU Emacs
 
 * Table of contents :toc:
 - [[#intro][Intro]]
+- [[#installation][Installation]]
 - [[#configuration][Configuration]]
   - [[#packages][Packages]]
   - [[#keybinds][Keybinds]]
@@ -13,9 +15,16 @@
 - [[#future-implementations][Future implementations]]
 
 * Intro
-This is a very simple emacs config designed as a way to practice literate programming and elisp, as such it is still missing a lot of configurations and features such as tree-sitter and lsp for it to be a feasible IDE, but it still is a WIP
+This is a very simple emacs config designed as a way to practice literate programming elisp and org-mode, as such it is still missing a lot of configurations and features such as tree-sitter and lsp for it to be a feasible IDE, but it still is a WIP
 
 The config can be fully edited using [[file:config.org][config.org]], and it is divided by sections for easy editing.
+
+* Installation
+For a simple install just clone the repository to ~/.config/emacs on GNU/Linux, remove ~/.emacs.d if it exists
+#+begin_src bash
+git clone https://github.com/CDamianS/emacs-dotfiles.git ~/.config/emacs
+#+end_src
+
 
 * Configuration
 This specific config uses the [[https://github.com/radian-software/straight.el][straight.el]] package manager instead of default package.el, as I find it to be more flexible and easier to use.
@@ -39,8 +48,8 @@ Keybind guide:
 
 | Keybind | Action   |
 |---------+----------|
-| <C-->   | Zoom out |
-| <C-=>   | Zoom in  |
+| <C ->   | Zoom out |
+| <C =>   | Zoom in  |
 
 *** Prefix with leader <SPC>
 **** File Keybinds
@@ -84,10 +93,12 @@ for a simpler Org-mode experience
 * TODO Future implementations
 Future packages or features I'd like to add, might change in the future
 
-- Dashboard or startpage
 - Smooth scrolling
-- LSP for autocompletion
 - Magit as a Git porcelain
+- Dashboard or startpage
 - Treesitter for syntax highlighting
 - Projectile for project management
+- More keybinds
+- Org Agenda
+- LSP for autocompletion
   
