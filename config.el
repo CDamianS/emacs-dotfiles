@@ -1,35 +1,42 @@
 (defvar bootstrap-version)
-    (let ((bootstrap-file
-	   (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	  (bootstrap-version 6))
-      (unless (file-exists-p bootstrap-file)
-	(with-current-buffer
-	    (url-retrieve-synchronously
-	     "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	     'silent 'inhibit-cookies)
-	  (goto-char (point-max))
-	  (eval-print-last-sexp)))
-      (load bootstrap-file nil 'nomessage))
-  ;; use-package macro and set to default
-  (straight-use-package 'use-package)
+(let ((bootstrap-file
+    (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+    (bootstrap-version 6))
+(unless (file-exists-p bootstrap-file)
+        (with-current-buffer
+        (url-retrieve-synchronously
+        "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+        'silent 'inhibit-cookies)
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+(load bootstrap-file nil 'nomessage))
+;; use-package macro and set to default
+(straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
-(straight-use-package 'evil)
-(use-package evil
- :init
- (setq evil-want-integration t)
- (setq evil-want-keybinding nil)
- (setq evil-want-vsplit-window-right t)
- (setq evil-want-split-window-below t)
- (evil-mode))
+  (straight-use-package 'evil)
+  (use-package evil
+   :init
+   (setq evil-want-integration t)
+   (setq evil-want-keybinding nil)
+   (setq evil-want-vsplit-window-right t)
+   (setq evil-want-split-window-below t)
+   (evil-mode))
 
-(use-package evil-collection
- :after evil
- :config
- (setq evil-collection-mode-list '(dashboard dired ibuffer))
- (evil-collection-init))
+  (use-package evil-collection
+   :after evil
+   :config
+   (setq evil-collection-mode-list '(dashboard dired ibuffer))
+   (evil-collection-init))
 
 (global-set-key (kbd "C-u") 'evil-scroll-up)
+
+(use-package all-the-icons
+:ensure t
+:if (display-graphic-p))
+
+(use-package all-the-icons-dired
+:hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
 
 (set-face-attribute 'default nil
   :font "FiraCode Nerd Font"
@@ -44,10 +51,10 @@
   :height 110
   :weight 'medium)
 
-(set-face-attribute 'font-lock-comment-face nil
-:slant 'italic)
-(set-face-attribute 'font-lock-keyword-face nil
-:slant 'italic)
+  (set-face-attribute 'font-lock-comment-face nil
+  :slant 'italic)
+  (set-face-attribute 'font-lock-keyword-face nil
+  :slant 'italic)
 
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -55,63 +62,152 @@
 (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-11"))
 (setq-default line-spacing 0.12)
 
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
 
-(global-display-line-numbers-mode 1)
-(global-visual-line-mode t)
-(setq display-line-numbers-type 'relative)
+  (global-display-line-numbers-mode 1)
+  (global-visual-line-mode t)
+  (setq display-line-numbers-type 'relative)
 
 (straight-use-package 'catppuccin-theme)
 (load-theme 'catppuccin :no-confirm)
 (setq catppuccin-flavor 'latte) ;; or 'frappe, 'macchiato, or 'mocha
 (catppuccin-reload)
 
-(use-package general
+  (use-package general
+      :config
+      (general-evil-setup)
+
+  ;; set up Space as the global leader key
+  (general-create-definer leader-keys
+      :states '(normal insert visual emacs)
+      :keymaps 'override
+      :prefix "SPC" ;; set leader
+      :global-prefix "M-SPC")
+
+  ;; File
+  ;; TODO: highlighted 
+  (leader-keys
+      "." '(find-file :wk "Find file")
+      "fr" '(counsel-recentf :wk "Find recent file")
+      "fp" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit config")
+      "fs" '(save-buffer :wk "Save buffer"))
+
+  ;; Buffer
+  (leader-keys
+      "b" '(:ignore t :wk "Buffer")
+      "bb" '(switch-to-buffer :wk "Switch buffer")
+      "bi" '(ibuffer :wk "Ibuffer")
+      "bd" '(kill-this-buffer :wk "Kill this buffer")
+      "bn" '(next-buffer :wk "Next buffer")
+      "bp" '(previous-buffer :wk "Previous buffer")
+      "br" '(revert-buffer :wk "Reload buffer"))
+
+  ;; Elisp eval 
+  (leader-keys
+      "e" '(:ignore t :wk "Evaluate")
+      "eb" '(eval-buffer :wk "Eval elisp in buffer")
+      "ed" '(eval-defun :wk "Eval defun containing or after point")
+      "ee" '(eval-expression :wk "Eval an elisp expression")
+      "el" '(eval-last-sexp :wk "Eval elisp expression before point")
+      "er" '(eval-region :wk "Eval elisp in region"))
+
+  ;; Help (I need somebody :o)
+  (leader-keys
+      "h" '(:ignore t :wk "Help")
+      "hf" '(describe-function :wk "Describe function")
+      "hv" '(describe-variable :wk "Describe variable")
+      "hrr" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Reload emacs config"))
+
+  ;; Window management
+  (leader-keys
+      "w" '(:ignore t :wk "Window")
+      "wh" '(evil-window-left :wk "Window left")
+      "wj" '(evil-window-down :wk "Window down")
+      "wk" '(evil-window-up :wk "Window up")
+      "wl" '(evil-window-right :wk "Window right")
+      "wq" '(evil-window-delete :wk "Delete current window")
+      "wv" '(evil-window-vsplit :wk "Move to the left window")
+      "ws" '(evil-window-split :wk "Move to the left window"))
+
+  ;; Open stuff 
+  (leader-keys
+      "o" '(:ignore t :wk "Open")
+      "ot" '(vterm-toggle :wk "Vterm toggle"))
+  )
+
+(use-package eshell-syntax-highlighting
+    :after  esh-mode
     :config
-    (general-evil-setup)
+    (eshell-syntax-highlighting-global-mode +1))
 
-;; set up Space as the global leader key
-(general-create-definer leader-keys
-    :states '(normal insert visual emacs)
-    :keymaps 'override
-    :prefix "SPC" ;; set leader
-    :global-prefix "M-SPC")
+(setq eshell-rc-script (concat user-emacs-directory "eshell/profile")
+      eshell-aliases-file (concat user-emacs-directory "eshell/aliases")
+      eshell-history-size 5000
+      eshell-buffer-maximum-lines 5000
+      eshell-hist-ignoredups t
+      eshell-scroll-to-bottom-on-input t
+      eshell-destroy-buffer-when-process-dies t
+      eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
 
-;; File
-;; TODO: highlighted 
-(leader-keys
-    "." '(find-file :wk "Find file")
-    "fp" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit config")
-    "fs" '(save-buffer :wk "Save buffer"))
+(use-package vterm
+:config
+(setq shell-file-name "/bin/zsh"
+      vterm-max-scrollback 5000))
 
-;; Buffer
-(leader-keys
-    "b" '(:ignore t :wk "Buffer")
-    "bb" '(switch-to-buffer :wk "Switch buffer")
-    "bi" '(ibuffer :wk "Ibuffer")
-    "bd" '(kill-this-buffer :wk "Kill this buffer")
-    "bn" '(next-buffer :wk "Next buffer")
-    "bp" '(previous-buffer :wk "Previous buffer")
-    "br" '(revert-buffer :wk "Reload buffer"))
+(use-package vterm-toggle
+  :after vterm
+  :config
+  (setq vterm-toggle-fullscreen-p nil)
+  (setq vterm-toggle-scope 'project)
+  (add-to-list 'display-buffer-alist
+               '((lambda (buffer-or-name _)
+                     (let ((buffer (get-buffer buffer-or-name)))
+                       (with-current-buffer buffer
+                         (or (equal major-mode 'vterm-mode)
+                             (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+                  (display-buffer-reuse-window display-buffer-at-bottom)
+                  ;;(display-buffer-reuse-window display-buffer-in-direction)
+                  ;;display-buffer-in-direction/direction/dedicated is added in emacs27
+                  ;;(direction . bottom)
+                  ;;(dedicated . t) ;dedicated is supported in emacs27
+                  (reusable-frames . visible)
+                  (window-height . 0.3))))
 
-;; Elisp eval 
-(leader-keys
-    "e" '(:ignore t :wk "Evaluate")
-    "eb" '(eval-buffer :wk "Eval elisp in buffer")
-    "ed" '(eval-defun :wk "Eval defun containing or after point")
-    "ee" '(eval-expression :wk "Eval an elisp expression")
-    "el" '(eval-last-sexp :wk "Eval elisp expression before point")
-    "er" '(eval-region :wk "Eval elisp in region"))
+(use-package magit)
 
-;; Help (I need somebody :o)
-(leader-keys
-    "h" '(:ignore t :wk "Help")
-    "hf" '(describe-function :wk "Describe function")
-    "hv" '(describe-variable :wk "Describe variable")
-    "hrr" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Reload emacs config"))
-)
+(use-package counsel
+  :after ivy
+  :config (counsel-mode))
+
+(use-package ivy
+  :bind
+  ;; ivy-resume resumes the last Ivy-based completion.
+  (("C-c C-r" . ivy-resume)
+   ("C-x B" . ivy-switch-buffer-other-window))
+  :custom
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq enable-recursive-minibuffers t)
+  :config
+  (ivy-mode))
+
+(use-package all-the-icons-ivy-rich
+  :ensure t
+  :init (all-the-icons-ivy-rich-mode 1))
+
+(use-package ivy-rich
+  :after ivy
+  :ensure t
+  :init (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
+  :custom
+  (ivy-virtual-abbreviate 'full
+   ivy-rich-switch-buffer-align-virtual-buffer t
+   ivy-rich-path-style 'abbrev)
+  :config
+  (ivy-set-display-transformer 'ivy-switch-buffer
+                               'ivy-rich-switch-buffer-transformer))
 
 (use-package toc-org
   :commands toc-org-enable
@@ -122,6 +218,7 @@
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 (electric-indent-mode -1)
+(setq org-src-preserve-indentation t)
 
 (require 'org-tempo)
 

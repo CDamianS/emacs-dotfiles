@@ -8,11 +8,16 @@
 - [[#priorities][Priorities]]
   - [[#package-manager-straightel][Package Manager (straight.el)]]
   - [[#evil-mode-][Evil mode >:)]]
+  - [[#all-the-icons][All the icons]]
   - [[#font-stuff][Font stuff]]
   - [[#gui][GUI]]
 - [[#general-keybindings][General Keybindings]]
   - [[#space][Space]]
+- [[#configurations][Configurations]]
+  - [[#shells][Shells]]
 - [[#more-plugins][More Plugins!!]]
+  - [[#magit][Magit]]
+  - [[#ivy][Ivy]]
   - [[#org-mode][Org-Mode]]
   - [[#sudo-edit][Sudo-edit]]
   - [[#which-key][Which-key]]
@@ -22,21 +27,21 @@
 I also added early-init.el to stop package.el from loading, as straight is more flexible
 
 #+BEGIN_SRC emacs-lisp
-      (defvar bootstrap-version)
-      (let ((bootstrap-file
-	     (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	    (bootstrap-version 6))
-	(unless (file-exists-p bootstrap-file)
-	  (with-current-buffer
-	      (url-retrieve-synchronously
-	       "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-	       'silent 'inhibit-cookies)
-	    (goto-char (point-max))
-	    (eval-print-last-sexp)))
-	(load bootstrap-file nil 'nomessage))
-    ;; use-package macro and set to default
-    (straight-use-package 'use-package)
-  (setq straight-use-package-by-default t)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+    (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+    (bootstrap-version 6))
+(unless (file-exists-p bootstrap-file)
+        (with-current-buffer
+        (url-retrieve-synchronously
+        "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+        'silent 'inhibit-cookies)
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+(load bootstrap-file nil 'nomessage))
+;; use-package macro and set to default
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
 #+END_SRC
 
 ** Evil mode >:)
@@ -63,6 +68,16 @@ Why isn't this a default?
 (global-set-key (kbd "C-u") 'evil-scroll-up)
 #+end_src
 
+** All the icons
+I love them all
+#+begin_src emacs-lisp
+(use-package all-the-icons
+:ensure t
+:if (display-graphic-p))
+
+(use-package all-the-icons-dired
+:hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
+#+end_src
 
 ** Font stuff
 Because I really like fira
@@ -133,9 +148,8 @@ catppuccin is fun
 #+END_SRC
 
 * General Keybindings
-
 ** Space
-follow the leader leader leader
+other keybinds may be on their specific configs
 #+BEGIN_SRC emacs-lisp
   (use-package general
       :config
@@ -152,6 +166,7 @@ follow the leader leader leader
   ;; TODO: highlighted 
   (leader-keys
       "." '(find-file :wk "Find file")
+      "fr" '(counsel-recentf :wk "Find recent file")
       "fp" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit config")
       "fs" '(save-buffer :wk "Save buffer"))
 
@@ -180,11 +195,119 @@ follow the leader leader leader
       "hf" '(describe-function :wk "Describe function")
       "hv" '(describe-variable :wk "Describe variable")
       "hrr" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Reload emacs config"))
+
+  ;; Window management
+  (leader-keys
+      "w" '(:ignore t :wk "Window")
+      "wh" '(evil-window-left :wk "Window left")
+      "wj" '(evil-window-down :wk "Window down")
+      "wk" '(evil-window-up :wk "Window up")
+      "wl" '(evil-window-right :wk "Window right")
+      "wq" '(evil-window-delete :wk "Delete current window")
+      "wv" '(evil-window-vsplit :wk "Move to the left window")
+      "ws" '(evil-window-split :wk "Move to the left window"))
+
+  ;; Open stuff 
+  (leader-keys
+      "o" '(:ignore t :wk "Open")
+      "ot" '(vterm-toggle :wk "Vterm toggle"))
   )
 #+END_SRC
 
+* Configurations
+** Shells
+*** Eshell
+#+begin_src emacs-lisp
+(use-package eshell-syntax-highlighting
+    :after  esh-mode
+    :config
+    (eshell-syntax-highlighting-global-mode +1))
+
+(setq eshell-rc-script (concat user-emacs-directory "eshell/profile")
+      eshell-aliases-file (concat user-emacs-directory "eshell/aliases")
+      eshell-history-size 5000
+      eshell-buffer-maximum-lines 5000
+      eshell-hist-ignoredups t
+      eshell-scroll-to-bottom-on-input t
+      eshell-destroy-buffer-when-process-dies t
+      eshell-visual-commands'("bash" "fish" "htop" "ssh" "top" "zsh"))
+#+end_src
+*** Vterm
+The best terminal :o
+#+begin_src emacs-lisp
+(use-package vterm
+:config
+(setq shell-file-name "/bin/zsh"
+      vterm-max-scrollback 5000))
+#+end_src
+*** Vterm-Toggle
+#+begin_src emacs-lisp
+(use-package vterm-toggle
+  :after vterm
+  :config
+  (setq vterm-toggle-fullscreen-p nil)
+  (setq vterm-toggle-scope 'project)
+  (add-to-list 'display-buffer-alist
+               '((lambda (buffer-or-name _)
+                     (let ((buffer (get-buffer buffer-or-name)))
+                       (with-current-buffer buffer
+                         (or (equal major-mode 'vterm-mode)
+                             (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+                  (display-buffer-reuse-window display-buffer-at-bottom)
+                  ;;(display-buffer-reuse-window display-buffer-in-direction)
+                  ;;display-buffer-in-direction/direction/dedicated is added in emacs27
+                  ;;(direction . bottom)
+                  ;;(dedicated . t) ;dedicated is supported in emacs27
+                  (reusable-frames . visible)
+                  (window-height . 0.3))))
+#+end_src
+
 * More Plugins!!
 Because that's the emacs experience
+
+** Magit
+git has never been easier
+*** Installation and config
+#+begin_src emacs-lisp
+(use-package magit)
+#+end_src
+
+** Ivy 
+Automated lazyness
+
+#+begin_src emacs-lisp
+(use-package counsel
+  :after ivy
+  :config (counsel-mode))
+
+(use-package ivy
+  :bind
+  ;; ivy-resume resumes the last Ivy-based completion.
+  (("C-c C-r" . ivy-resume)
+   ("C-x B" . ivy-switch-buffer-other-window))
+  :custom
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq enable-recursive-minibuffers t)
+  :config
+  (ivy-mode))
+
+(use-package all-the-icons-ivy-rich
+  :ensure t
+  :init (all-the-icons-ivy-rich-mode 1))
+
+(use-package ivy-rich
+  :after ivy
+  :ensure t
+  :init (ivy-rich-mode 1) ;; this gets us descriptions in M-x.
+  :custom
+  (ivy-virtual-abbreviate 'full
+   ivy-rich-switch-buffer-align-virtual-buffer t
+   ivy-rich-path-style 'abbrev)
+  :config
+  (ivy-set-display-transformer 'ivy-switch-buffer
+                               'ivy-rich-switch-buffer-transformer))
+#+end_src
 
 ** Org-Mode
 Making life simple and avoiding unorganized crime
@@ -198,15 +321,16 @@ Making life simple and avoiding unorganized crime
 *** Org-bullets
 pew pew
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-hook 'org-indent-mode)
-  (use-package org-bullets)
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(add-hook 'org-mode-hook 'org-indent-mode)
+(use-package org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+END_SRC
 
-*** Disable electric indent
+*** Weird TAB behaviour 
 weird org block indents fix :)
 #+BEGIN_SRC emacs-lisp
 (electric-indent-mode -1)
+(setq org-src-preserve-indentation t)
 #+END_SRC
 
 *** Org-tempo

@@ -38,6 +38,9 @@ A list of the currently used packages:
 - [[https://github.com/nflath/sudo-edit][Sudo-edit]] - Edit files as sudo
 - [[https://github.com/sabof/org-bullets][Org-bullets]] - Better Org headers
 - [[https://github.com/justbur/emacs-which-key][Which-key]] - Visual guide with the keybinds
+- Ivy
+- Magit
+- All the icons
   
 ** Keybinds
 Pretty much the standard evil keybinds plus some emacs stuff
@@ -94,7 +97,6 @@ for a simpler Org-mode experience
 Future packages or features I'd like to add, might change in the future
 
 - Smooth scrolling
-- Magit as a Git porcelain
 - Dashboard or startpage
 - Treesitter for syntax highlighting
 - Projectile for project management
