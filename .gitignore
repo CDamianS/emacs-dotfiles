@@ -2,5 +2,5 @@ auto-save-list/
 eln-cache/
 straight/
 transient/
-/eshell/
+eshell/
 url/
