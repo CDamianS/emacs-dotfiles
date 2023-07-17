@@ -1,0 +1,93 @@
+#+title: Personal GNU Emacs config
+#+author: Damian Suarez
+#+description: now in org mode!!
+#+startup: showeverything
+#+options: toc:2
+
+* Table of contents :toc:
+- [[#intro][Intro]]
+- [[#configuration][Configuration]]
+  - [[#packages][Packages]]
+  - [[#keybinds][Keybinds]]
+  - [[#org-tempest-cheatsheet][Org-tempest Cheatsheet]]
+- [[#future-implementations][Future implementations]]
+
+* Intro
+This is a very simple emacs config designed as a way to practice literate programming and elisp, as such it is still missing a lot of configurations and features such as tree-sitter and lsp for it to be a feasible IDE, but it still is a WIP
+
+The config can be fully edited using [[file:config.org][config.org]], and it is divided by sections for easy editing.
+
+* Configuration
+This specific config uses the [[https://github.com/radian-software/straight.el][straight.el]] package manager instead of default package.el, as I find it to be more flexible and easier to use.
+
+** Packages
+A list of the currently used packages:
+- [[https://github.com/emacs-evil/evil][Evil]] - For Vi/Vim keybinds (+evil collection) >:)
+- [[https://github.com/catppuccin/emacs][Catppuccin]] - Using the latte theme
+- [[https://github.com/noctuid/general.el][General]] - Better keybind editing
+- [[https://github.com/snosov1/toc-org][Toc-org]] - Easy Org-Mode Table of contents 
+- [[https://github.com/nflath/sudo-edit][Sudo-edit]] - Edit files as sudo
+- [[https://github.com/sabof/org-bullets][Org-bullets]] - Better Org headers
+- [[https://github.com/justbur/emacs-which-key][Which-key]] - Visual guide with the keybinds
+  
+** Keybinds
+Pretty much the standard evil keybinds plus some emacs stuff
+
+Keybind guide:
+- C-... - Prefix with Contol
+- M-... - Prefix with Alt or Meta key
+
+| Keybind | Action   |
+|---------+----------|
+| <C-->   | Zoom out |
+| <C-=>   | Zoom in  |
+
+*** Prefix with leader <SPC>
+**** File Keybinds
+| Keybind | Action      |
+|---------+-------------|
+| <f p>   | Open config |
+| <f s>   | File save   |
+| < . >   | Find file   |
+
+**** Elisp Keybinds
+| Keybind | Action                |
+|---------+-----------------------|
+| <e b>   | Evaluate buffer       |
+| <e d>   | Evaluate after point  |
+| <e e>   | Evaluate expression   |
+| <e l>   | Evaluate before point |
+| <e r>   | Evaluate region       |
+
+**** Help 
+| Keybind | Action             |
+|---------+--------------------|
+| <h f>   | Describe function  |
+| <h v>   | Describe variable  |
+| <h r r> | Reload config file |
+
+** Org-tempest Cheatsheet
+for a simpler Org-mode experience
+| This + TAB |                                         |
+|------------+-----------------------------------------|
+| <a         | '#+BEGIN_EXPORT ascii' … '#+END_EXPORT  |
+| <c         | '#+BEGIN_CENTER' … '#+END_CENTER'       |
+| <C         | '#+BEGIN_COMMENT' … '#+END_COMMENT'     |
+| <e         | '#+BEGIN_EXAMPLE' … '#+END_EXAMPLE'     |
+| <E         | '#+BEGIN_EXPORT' … '#+END_EXPORT'       |
+| <h         | '#+BEGIN_EXPORT html' … '#+END_EXPORT'  |
+| <l         | '#+BEGIN_EXPORT latex' … '#+END_EXPORT' |
+| <q         | '#+BEGIN_QUOTE' … '#+END_QUOTE'         |
+| <s         | '#+BEGIN_SRC' … '#+END_SRC'             |
+| <v         | '#+BEGIN_VERSE' … '#+END_VERSE'         |
+
+* TODO Future implementations
+Future packages or features I'd like to add, might change in the future
+
+- Dashboard or startpage
+- Smooth scrolling
+- LSP for autocompletion
+- Magit as a Git porcelain
+- Treesitter for syntax highlighting
+- Projectile for project management
+  
