@@ -14,7 +14,6 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
-  (straight-use-package 'evil)
   (use-package evil
    :init
    (setq evil-want-integration t)
@@ -77,6 +76,9 @@
 (load-theme 'catppuccin :no-confirm)
 (setq catppuccin-flavor 'latte) ;; or 'frappe, 'macchiato, or 'mocha
 (catppuccin-reload)
+
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+;;(load-theme 'Bloom t)
 
   (use-package general
       :config
@@ -177,6 +179,43 @@
                   (reusable-frames . visible)
                   (window-height . 0.3))))
 
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+
+;; Set the title
+(setq dashboard-banner-logo-title "Welcome to GNU Emacs")
+;; Set the banner
+(setq dashboard-startup-banner 'official) 
+;; Value can be
+;; - nil to display no banner
+;; - 'official which displays the official emacs logo
+;; - 'logo which displays an alternative emacs logo
+;; - 1, 2 or 3 which displays one of the text banners
+;; - "path/to/your/image.gif", "path/to/your/image.png" or "path/to/your/text.txt" which displays whatever gif/image/text you would prefer
+;; - a cons of '("path/to/your/image.png" . "path/to/your/text.txt")
+
+;; Content is not centered by default. To center, set
+(setq dashboard-center-content t)
+;; To disable shortcut "jump" indicators for each section, set
+(setq dashboard-items '((recents  . 3)
+                        (bookmarks . 5)
+                        (projects . 5)
+                        (agenda . 5)
+                        (registers . 5)))
+
+;; Heading icons
+;; (setq dashboard-set-heading-icons t)
+;; All the icons
+(setq dashboard-icon-type 'all-the-icons) 
+;; Load times
+(setq dashboard-set-init-info nil)
+;; File Icons
+(setq dashboard-set-file-icons t)
+;; Footer
+(setq dashboard-set-footer nil)
+
 (use-package counsel
   :after ivy
   :config (counsel-mode))
@@ -224,6 +263,10 @@
 
 (require 'org-tempo)
 
+(use-package projectile
+    :config
+    (projectile-mode 1))
+
 (use-package rainbow-mode
     :hook org-mode prog-mode)
 
@@ -247,5 +290,5 @@
 	which-key-side-window-max-height 0.25
 	which-key-idle-delay 0.8
 	which-key-max-description-length 25
-	which-key-allow-imprecise-window-fit t
+	which-key-allow-imprecise-window-fit nil
 	which-key-separator " → "))

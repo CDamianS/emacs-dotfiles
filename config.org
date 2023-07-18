@@ -16,9 +16,11 @@
 - [[#configurations][Configurations]]
   - [[#shells][Shells]]
 - [[#more-plugins][More Plugins!!]]
+  - [[#dashboard][Dashboard]]
   - [[#ivy][Ivy]]
   - [[#magit][Magit]]
   - [[#org-mode][Org-Mode]]
+  - [[#projectile][Projectile]]
   - [[#rainbow-mode][Rainbow mode]]
   - [[#sudo-edit][Sudo-edit]]
   - [[#which-key][Which-key]]
@@ -48,7 +50,6 @@ I also added early-init.el to stop package.el from loading, as straight is more 
 ** Evil mode >:)
 vi-vi-vi is the symbol of the beast!
 #+BEGIN_SRC emacs-lisp
-  (straight-use-package 'evil)
   (use-package evil
    :init
    (setq evil-want-integration t)
@@ -147,12 +148,20 @@ who needs C-v
 #+end_src
 
 *** Colorscheme
+**** Catpuccin
 catppuccin is fun
+uncomment this block and comment the next or viceversa
 #+BEGIN_SRC emacs-lisp
 (straight-use-package 'catppuccin-theme)
 (load-theme 'catppuccin :no-confirm)
 (setq catppuccin-flavor 'latte) ;; or 'frappe, 'macchiato, or 'mocha
 (catppuccin-reload)
+#+END_SRC
+**** Personal Theme 
+it's called bloom :)
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+;;(load-theme 'Bloom t)
 #+END_SRC
 
 * General Keybindings
@@ -273,6 +282,47 @@ you can probably use shell-file-name but it was bugged for me :o
 * More Plugins!!
 Because that's the emacs experience
 
+** Dashboard
+Dashin' to the startup
+#+begin_src emacs-lisp
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+
+;; Set the title
+(setq dashboard-banner-logo-title "Welcome to GNU Emacs")
+;; Set the banner
+(setq dashboard-startup-banner 'official) 
+;; Value can be
+;; - nil to display no banner
+;; - 'official which displays the official emacs logo
+;; - 'logo which displays an alternative emacs logo
+;; - 1, 2 or 3 which displays one of the text banners
+;; - "path/to/your/image.gif", "path/to/your/image.png" or "path/to/your/text.txt" which displays whatever gif/image/text you would prefer
+;; - a cons of '("path/to/your/image.png" . "path/to/your/text.txt")
+
+;; Content is not centered by default. To center, set
+(setq dashboard-center-content t)
+;; To disable shortcut "jump" indicators for each section, set
+(setq dashboard-items '((recents  . 3)
+                        (bookmarks . 5)
+                        (projects . 5)
+                        (agenda . 5)
+                        (registers . 5)))
+
+;; Heading icons
+;; (setq dashboard-set-heading-icons t)
+;; All the icons
+(setq dashboard-icon-type 'all-the-icons) 
+;; Load times
+(setq dashboard-set-init-info nil)
+;; File Icons
+(setq dashboard-set-file-icons t)
+;; Footer
+(setq dashboard-set-footer nil)
+#+end_src
+
 ** Ivy 
 Automated lazyness
 #+begin_src emacs-lisp
@@ -346,8 +396,18 @@ like emmet but good
 (require 'org-tempo)
 #+END_SRC
 
+** Projectile
+To aim high with your projects
+#+begin_src emacs-lisp
+(use-package projectile
+    :config
+    (projectile-mode 1))
+#+end_src
 ** Rainbow mode
 pride flags galore
+#B00B69
+#A55EA7
+#1D1CC9 
 #+begin_src emacs-lisp
 (use-package rainbow-mode
     :hook org-mode prog-mode)
@@ -380,6 +440,6 @@ you expect me to use sane keybinds??
 	which-key-side-window-max-height 0.25
 	which-key-idle-delay 0.8
 	which-key-max-description-length 25
-	which-key-allow-imprecise-window-fit t
+	which-key-allow-imprecise-window-fit nil
 	which-key-separator " → "))
 #+END_SRC
