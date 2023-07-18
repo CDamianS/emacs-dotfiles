@@ -12,6 +12,7 @@
   - [[#font-stuff][Font stuff]]
   - [[#gui][GUI]]
 - [[#general-keybindings][General Keybindings]]
+  - [[#evil-special-keybinds][Evil special keybinds]]
   - [[#space][Space]]
 - [[#configurations][Configurations]]
   - [[#shells][Shells]]
@@ -19,6 +20,7 @@
   - [[#dashboard][Dashboard]]
   - [[#ivy][Ivy]]
   - [[#magit][Magit]]
+  - [[#language-support][Language Support]]
   - [[#org-mode][Org-Mode]]
   - [[#projectile][Projectile]]
   - [[#rainbow-mode][Rainbow mode]]
@@ -165,6 +167,13 @@ it's called bloom :)
 #+END_SRC
 
 * General Keybindings
+** Evil special keybinds
+#+begin_src emacs-lisp
+(use-package key-chord)
+(setq key-chord-two-keys-delay 0.5)
+(key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+(key-chord-mode 1)
+#+end_src
 ** Space
 other keybinds may be on their specific configs
 #+BEGIN_SRC emacs-lisp
@@ -366,6 +375,27 @@ git has never been easier
 (use-package magit)
 #+end_src
 
+** Language Support
+*** Languages
+Emacs has built-in programming language modes for Lisp, Scheme, DSSSL, Ada, ASM, AWK, C, C++, Fortran, Icon, IDL (CORBA), IDLWAVE, Java, Javascript, M4, Makefiles, Metafont, Modula2, Object Pascal, Objective-C, Octave, Pascal, Perl, Pike, PostScript, Prolog, Python, Ruby, Simula, SQL, Tcl, Verilog, and VHDL.  Other languages will require you to install additional modes.
+#+begin_src emacs-lisp
+(use-package go-mode)
+(use-package lua-mode)
+(use-package web-mode)
+#+end_src
+
+*** Flycheck
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t
+  :defer t
+  :diminish
+  :init (global-flycheck-mode))
+#+end_src
+*** Diminish
+#+begin_src emacs-lisp
+(use-package diminish)
+#+end_src
 ** Org-Mode
 Making life simple and avoiding unorganized crime
 *** Enabling table of contents
@@ -375,6 +405,10 @@ Making life simple and avoiding unorganized crime
   :init (add-hook 'org-mode-hook 'toc-org-enable))
 #+END_SRC
 
+*** Folder
+#+begin_src emacs-lisp
+(setq org-agenda-files (quote ("~/Agenda/")))
+#+end_src
 *** Org-bullets
 pew pew
 #+BEGIN_SRC emacs-lisp
@@ -388,6 +422,7 @@ weird org block indents fix :)
 #+BEGIN_SRC emacs-lisp
 (electric-indent-mode -1)
 (setq org-src-preserve-indentation t)
+(setq ation t)
 #+END_SRC
 
 *** Org-tempo
@@ -395,6 +430,34 @@ like emmet but good
 #+BEGIN_SRC emacs-lisp
 (require 'org-tempo)
 #+END_SRC
+
+*** Keybinds
+#+begin_src emacs-lisp
+(leader-keys
+    "m" '(:ignore t :wk "Org")
+    "oa" '(org-agenda :wk "Org agenda")
+    "me" '(org-export-dispatch :wk "Org export dispatch")
+    "mi" '(org-toggle-item :wk "Org toggle item")
+    "mt" '(org-todo :wk "Org todo")
+    "mB" '(org-babel-tangle :wk "Org babel tangle")
+    "mT" '(org-todo-list :wk "Org todo list"))
+
+(leader-keys
+    "mb" '(:ignore t :wk "Tables")
+    "mb -" '(org-table-insert-hline :wk "Insert hline in table"))
+
+(leader-keys
+    "md" '(:ignore t :wk "Date/deadline")
+    "mdt" '(org-time-stamp :wk "Org time stamp"))
+
+(leader-keys
+    "p" '(projectile-command-map :wk "Projectile"))
+#+end_src
+*** Agenda
+Notion if it was good
+#+begin_src emacs-lisp
+
+#+end_src
 
 ** Projectile
 To aim high with your projects

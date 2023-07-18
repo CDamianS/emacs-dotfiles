@@ -80,6 +80,11 @@
 (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
 ;;(load-theme 'Bloom t)
 
+(use-package key-chord)
+(setq key-chord-two-keys-delay 0.5)
+(key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+(key-chord-mode 1)
+
   (use-package general
       :config
       (general-evil-setup)
@@ -250,9 +255,22 @@
 
 (use-package magit)
 
+(use-package go-mode)
+(use-package lua-mode)
+
+(use-package flycheck
+  :ensure t
+  :defer t
+  :diminish
+  :init (global-flycheck-mode))
+
+(use-package diminish)
+
 (use-package toc-org
   :commands toc-org-enable
   :init (add-hook 'org-mode-hook 'toc-org-enable))
+
+(setq org-agenda-files (quote ("~/Agenda/")))
 
 (add-hook 'org-mode-hook 'org-indent-mode)
 (use-package org-bullets)
@@ -260,8 +278,31 @@
 
 (electric-indent-mode -1)
 (setq org-src-preserve-indentation t)
+(setq ation t)
 
 (require 'org-tempo)
+
+(leader-keys
+    "m" '(:ignore t :wk "Org")
+    "oa" '(org-agenda :wk "Org agenda")
+    "me" '(org-export-dispatch :wk "Org export dispatch")
+    "mi" '(org-toggle-item :wk "Org toggle item")
+    "mt" '(org-todo :wk "Org todo")
+    "mB" '(org-babel-tangle :wk "Org babel tangle")
+    "mT" '(org-todo-list :wk "Org todo list"))
+
+(leader-keys
+    "mb" '(:ignore t :wk "Tables")
+    "mb -" '(org-table-insert-hline :wk "Insert hline in table"))
+
+(leader-keys
+    "md" '(:ignore t :wk "Date/deadline")
+    "mdt" '(org-time-stamp :wk "Org time stamp"))
+
+(leader-keys
+    "p" '(projectile-command-map :wk "Projectile"))
+
+
 
 (use-package projectile
     :config
