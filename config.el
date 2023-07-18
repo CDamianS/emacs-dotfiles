@@ -14,7 +14,7 @@
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
-  (use-package evil
+(use-package evil
    :init
    (setq evil-want-integration t)
    (setq evil-want-keybinding nil)
@@ -22,13 +22,15 @@
    (setq evil-want-split-window-below t)
    (evil-mode))
 
-  (use-package evil-collection
+(use-package evil-collection
    :after evil
    :config
-   (setq evil-collection-mode-list '(dashboard dired ibuffer))
+   (setq evil-collection-mode-list '(org dashboard dired ibuffer magit))
    (evil-collection-init))
 
 (global-set-key (kbd "C-u") 'evil-scroll-up)
+
+
 
 (use-package all-the-icons
 :ensure t
@@ -50,10 +52,10 @@
   :height 110
   :weight 'medium)
 
-  (set-face-attribute 'font-lock-comment-face nil
-  :slant 'italic)
-  (set-face-attribute 'font-lock-keyword-face nil
-  :slant 'italic)
+(set-face-attribute 'font-lock-comment-face nil
+:slant 'italic)
+(set-face-attribute 'font-lock-keyword-face nil
+:slant 'italic)
 
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -61,91 +63,104 @@
 (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-11"))
 (setq-default line-spacing 0.12)
 
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
 
-  (global-display-line-numbers-mode 1)
-  (global-visual-line-mode t)
-  (setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
+(global-visual-line-mode t)
+(setq display-line-numbers-type 'relative)
 
 (setq scroll-step            1
       scroll-conservatively  10000)
 
-(straight-use-package 'catppuccin-theme)
-(load-theme 'catppuccin :no-confirm)
-(setq catppuccin-flavor 'latte) ;; or 'frappe, 'macchiato, or 'mocha
-(catppuccin-reload)
-
 (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+ (straight-use-package 'catppuccin-theme)
+ (load-theme 'catppuccin :no-confirm)
+;; (setq catppuccin-flavor 'macchiato) ;; or 'frappe, 'latte, or 'mocha
+;; (catppuccin-reload)
+
 ;;(load-theme 'Bloom t)
 
-(use-package key-chord)
-(setq key-chord-two-keys-delay 0.5)
-(key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
-(key-chord-mode 1)
+;;(load-theme 'spaceduck t)
 
-  (use-package general
-      :config
-      (general-evil-setup)
+(use-package general
+    :config
+    (general-evil-setup)
 
-  ;; set up Space as the global leader key
-  (general-create-definer leader-keys
-      :states '(normal insert visual emacs)
-      :keymaps 'override
-      :prefix "SPC" ;; set leader
-      :global-prefix "M-SPC")
+;; set up Space as the global leader key
+(general-create-definer leader-keys
+    :states '(normal insert visual emacs)
+    :keymaps 'override
+    :prefix "SPC" ;; set leader
+    :global-prefix "M-SPC")
 
-  ;; File
-  ;; TODO: highlighted 
-  (leader-keys
-      "." '(find-file :wk "Find file")
-      "fr" '(counsel-recentf :wk "Find recent file")
-      "fp" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit config")
-      "fs" '(save-buffer :wk "Save buffer"))
+;; File
+;; TODO: highlighted 
+(leader-keys
+    "f" '(:ignore :wk "File")
+    "." '(find-file :wk "Find file")
+    "fr" '(counsel-recentf :wk "Find recent file")
+    "fp" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit config")
+    "fs" '(save-buffer :wk "Save File"))
 
-  ;; Buffer
-  (leader-keys
-      "b" '(:ignore t :wk "Buffer")
-      "bb" '(switch-to-buffer :wk "Switch buffer")
-      "bi" '(ibuffer :wk "Ibuffer")
-      "bd" '(kill-this-buffer :wk "Kill this buffer")
-      "bn" '(next-buffer :wk "Next buffer")
-      "bp" '(previous-buffer :wk "Previous buffer")
-      "br" '(revert-buffer :wk "Reload buffer"))
+;; Buffer
+(leader-keys
+    "b" '(:ignore t :wk "Buffer")
+    "bb" '(switch-to-buffer :wk "Switch buffer")
+    "bi" '(ibuffer :wk "Ibuffer")
+    "bd" '(kill-this-buffer :wk "Kill this buffer")
+    "bn" '(next-buffer :wk "Next buffer")
+    "bp" '(previous-buffer :wk "Previous buffer")
+    "br" '(revert-buffer :wk "Reload buffer"))
 
-  ;; Elisp eval 
-  (leader-keys
-      "e" '(:ignore t :wk "Evaluate")
-      "eb" '(eval-buffer :wk "Eval elisp in buffer")
-      "ed" '(eval-defun :wk "Eval defun containing or after point")
-      "ee" '(eval-expression :wk "Eval an elisp expression")
-      "el" '(eval-last-sexp :wk "Eval elisp expression before point")
-      "er" '(eval-region :wk "Eval elisp in region"))
+;; Elisp eval 
+(leader-keys
+    "e" '(:ignore t :wk "Evaluate")
+    "eb" '(eval-buffer :wk "Eval elisp in buffer")
+    "ed" '(eval-defun :wk "Eval defun containing or after point")
+    "ee" '(eval-expression :wk "Eval an elisp expression")
+    "el" '(eval-last-sexp :wk "Eval elisp expression before point")
+    "er" '(eval-region :wk "Eval elisp in region"))
 
-  ;; Help (I need somebody :o)
-  (leader-keys
-      "h" '(:ignore t :wk "Help")
-      "hf" '(describe-function :wk "Describe function")
-      "hv" '(describe-variable :wk "Describe variable")
-      "hrr" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Reload emacs config"))
+;; Help (I need somebody :o)
+(leader-keys
+    "h" '(:ignore t :wk "Help")
+    "hf" '(describe-function :wk "Describe function")
+    "hv" '(describe-variable :wk "Describe variable")
+    "hrr" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Reload emacs config"))
 
-  ;; Window management
-  (leader-keys
-      "w" '(:ignore t :wk "Window")
-      "wh" '(evil-window-left :wk "Window left")
-      "wj" '(evil-window-down :wk "Window down")
-      "wk" '(evil-window-up :wk "Window up")
-      "wl" '(evil-window-right :wk "Window right")
-      "wq" '(evil-window-delete :wk "Delete current window")
-      "wv" '(evil-window-vsplit :wk "Move to the left window")
-      "ws" '(evil-window-split :wk "Move to the left window"))
+;; Window management
+(leader-keys
+    "w" '(:ignore t :wk "Window")
+    "wh" '(evil-window-left :wk "Window left")
+    "wj" '(evil-window-down :wk "Window down")
+    "wk" '(evil-window-up :wk "Window up")
+    "wl" '(evil-window-right :wk "Window right")
+    "wq" '(evil-window-delete :wk "Delete current window")
+    "wv" '(evil-window-vsplit :wk "Move to the left window")
+    "ws" '(evil-window-split :wk "Move to the left window"))
 
-  ;; Open stuff 
-  (leader-keys
-      "o" '(:ignore t :wk "Open")
-      "ot" '(vterm-toggle :wk "Vterm toggle"))
-  )
+;; Open stuff 
+(leader-keys
+    "o" '(:ignore t :wk "Open")
+    "ot" '(vterm-toggle :wk "Vterm toggle")
+    "op" '(treemacs :wk "treemacs"))
+)
+
+(general-create-definer evil-keys
+    :keymaps 'override
+    )
+
+(evil-keys
+    :prefix "j"
+    :states '(insert)
+    "k" '(evil-normal-state :wk "Normal state"))
+
+(evil-keys
+    :states '(normal visual)
+    :prefix "g"
+    "cc" '(comment-line :wk "Comment line"))
 
 (use-package eshell-syntax-highlighting
     :after  esh-mode
@@ -185,41 +200,23 @@
                   (window-height . 0.3))))
 
 (use-package dashboard
-  :ensure t
+  :ensure t 
+  :init
+  (setq initial-buffer-choice 'dashboard-open)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-banner-logo-title "Welcome to GNU Emacs!")
+  (setq dashboard-startup-banner 'official) ;; use standard emacs logo as banner
+  (setq dashboard-center-content t) ;; set to 't' for centered content
+  (setq dashboard-items '((recents  . 3)
+                         (bookmarks . 5)
+                         (projects . 5)
+                         (agenda . 5)))
   :config
   (dashboard-setup-startup-hook))
 
-;; Set the title
-(setq dashboard-banner-logo-title "Welcome to GNU Emacs")
-;; Set the banner
-(setq dashboard-startup-banner 'official) 
-;; Value can be
-;; - nil to display no banner
-;; - 'official which displays the official emacs logo
-;; - 'logo which displays an alternative emacs logo
-;; - 1, 2 or 3 which displays one of the text banners
-;; - "path/to/your/image.gif", "path/to/your/image.png" or "path/to/your/text.txt" which displays whatever gif/image/text you would prefer
-;; - a cons of '("path/to/your/image.png" . "path/to/your/text.txt")
-
-;; Content is not centered by default. To center, set
-(setq dashboard-center-content t)
-;; To disable shortcut "jump" indicators for each section, set
-(setq dashboard-items '((recents  . 3)
-                        (bookmarks . 5)
-                        (projects . 5)
-                        (agenda . 5)
-                        (registers . 5)))
-
-;; Heading icons
-;; (setq dashboard-set-heading-icons t)
-;; All the icons
-(setq dashboard-icon-type 'all-the-icons) 
-;; Load times
+(setq dashboard-footer-messages '("TQMT"))
 (setq dashboard-set-init-info nil)
-;; File Icons
-(setq dashboard-set-file-icons t)
-;; Footer
-(setq dashboard-set-footer nil)
 
 (use-package counsel
   :after ivy
@@ -254,9 +251,15 @@
                                'ivy-rich-switch-buffer-transformer))
 
 (use-package magit)
+(setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+
+(leader-keys
+    "g" '(:ignore t :wk "Git")
+    "gg" '(magit-status :wk "Magit Status"))
 
 (use-package go-mode)
 (use-package lua-mode)
+(use-package web-mode)
 
 (use-package flycheck
   :ensure t
@@ -300,9 +303,8 @@
     "mdt" '(org-time-stamp :wk "Org time stamp"))
 
 (leader-keys
-    "p" '(projectile-command-map :wk "Projectile"))
-
-
+    "p" '(projectile-command-map :wk "Projectile")
+    "ff" '(projectile-find-file :wk "Projectile find file"))
 
 (use-package projectile
     :config
@@ -316,6 +318,9 @@
     (leader-keys
         "fu" '(sudo-edit-find-file :wk "Sudo find file")
         "fU" '(sudo-edit :wk "Sudo edit this file")))
+
+(use-package treemacs)
+(use-package treemacs-evil)
 
 (use-package which-key
   :init

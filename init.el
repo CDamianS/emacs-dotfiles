@@ -7,6 +7,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("72d880c2fd3fbf02abd467608fd2bd33635e7a5b8d0fc3eea2194fcc7e69fa72" default))
  '(ivy-initial-inputs-alist
    '((counsel-minor . "^+")
      (counsel-package . "^+")
