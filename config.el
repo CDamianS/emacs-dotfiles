@@ -61,10 +61,26 @@
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
 
-(add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-11"))
+(add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-14"))
 (setq-default line-spacing 0.12)
 
-(use-package lsp-mode)
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook ((XXX-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+;; optionally
+(use-package lsp-ui :commands lsp-ui-mode)
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+(use-package dap-mode)
+(use-package which-key
+    :config
+    (which-key-mode))
+
+(use-package company)
+(use-package yasnippet-snippets)
 
   (menu-bar-mode -1)
   (tool-bar-mode -1)
