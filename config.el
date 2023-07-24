@@ -28,9 +28,10 @@
    (setq evil-collection-mode-list '(org dashboard dired ibuffer magit))
    (evil-collection-init))
 
+(use-package evil-commentary)
+(evil-commentary-mode)
+
 (global-set-key (kbd "C-u") 'evil-scroll-up)
-
-
 
 (use-package all-the-icons
 :ensure t
@@ -41,21 +42,21 @@
 
 (set-face-attribute 'default nil
   :font "FiraCode Nerd Font"
-  :height 110
+  :height 140
   :weight 'medium)
 (set-face-attribute 'variable-pitch nil
   :font "Source Code Pro"
-  :height 110
+  :height 140
   :weight 'medium)
 (set-face-attribute 'fixed-pitch nil
   :font "FiraCode Nerd Font"
-  :height 110
+  :height 140
   :weight 'medium)
 
-(set-face-attribute 'font-lock-comment-face nil
-:slant 'italic)
-(set-face-attribute 'font-lock-keyword-face nil
-:slant 'italic)
+  (set-face-attribute 'font-lock-comment-face nil
+  :slant 'italic)
+  (set-face-attribute 'font-lock-keyword-face nil
+  :slant 'italic)
 
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -63,90 +64,93 @@
 (add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-11"))
 (setq-default line-spacing 0.12)
 
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+(use-package lsp-mode)
 
-(global-display-line-numbers-mode 1)
-(global-visual-line-mode t)
-(setq display-line-numbers-type 'relative)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+
+  (global-display-line-numbers-mode 1)
+  (global-visual-line-mode t)
+  (setq display-line-numbers-type 'relative)
 
 (setq scroll-step            1
-      scroll-conservatively  10000)
+      scroll-conservatively  10000
+      scroll-margin 8)
 
-(add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
- (straight-use-package 'catppuccin-theme)
- (load-theme 'catppuccin :no-confirm)
-;; (setq catppuccin-flavor 'macchiato) ;; or 'frappe, 'latte, or 'mocha
-;; (catppuccin-reload)
+   (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
+   (straight-use-package 'catppuccin-theme)
+   (load-theme 'catppuccin :no-confirm)
+  (setq catppuccin-flavor 'mocha) ;; or 'frappe, 'latte, or 'mocha
+  ;; (catppuccin-reload)
 
 ;;(load-theme 'Bloom t)
 
 ;;(load-theme 'spaceduck t)
 
-(use-package general
-    :config
-    (general-evil-setup)
+  (use-package general
+      :config
+      (general-evil-setup)
 
-;; set up Space as the global leader key
-(general-create-definer leader-keys
-    :states '(normal insert visual emacs)
-    :keymaps 'override
-    :prefix "SPC" ;; set leader
-    :global-prefix "M-SPC")
+  ;; set up Space as the global leader key
+  (general-create-definer leader-keys
+      :states '(normal insert visual emacs)
+      :keymaps 'override
+      :prefix "SPC" ;; set leader
+      :global-prefix "M-SPC")
 
-;; File
-;; TODO: highlighted 
-(leader-keys
-    "f" '(:ignore :wk "File")
-    "." '(find-file :wk "Find file")
-    "fr" '(counsel-recentf :wk "Find recent file")
-    "fp" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit config")
-    "fs" '(save-buffer :wk "Save File"))
+  ;; File
+  ;; TODO: highlighted 
+  (leader-keys
+      "f" '(:ignore :wk "File")
+      "." '(find-file :wk "Find file")
+      "fr" '(counsel-recentf :wk "Find recent file")
+      "fp" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit config")
+      "fs" '(save-buffer :wk "Save File"))
 
-;; Buffer
-(leader-keys
-    "b" '(:ignore t :wk "Buffer")
-    "bb" '(switch-to-buffer :wk "Switch buffer")
-    "bi" '(ibuffer :wk "Ibuffer")
-    "bd" '(kill-this-buffer :wk "Kill this buffer")
-    "bn" '(next-buffer :wk "Next buffer")
-    "bp" '(previous-buffer :wk "Previous buffer")
-    "br" '(revert-buffer :wk "Reload buffer"))
+  ;; Buffer
+  (leader-keys
+      "b" '(:ignore t :wk "Buffer")
+      "bb" '(switch-to-buffer :wk "Switch buffer")
+      "bi" '(ibuffer :wk "Ibuffer")
+      "bd" '(kill-this-buffer :wk "Kill this buffer")
+      "bn" '(next-buffer :wk "Next buffer")
+      "bp" '(previous-buffer :wk "Previous buffer")
+      "br" '(revert-buffer :wk "Reload buffer"))
 
-;; Elisp eval 
-(leader-keys
-    "e" '(:ignore t :wk "Evaluate")
-    "eb" '(eval-buffer :wk "Eval elisp in buffer")
-    "ed" '(eval-defun :wk "Eval defun containing or after point")
-    "ee" '(eval-expression :wk "Eval an elisp expression")
-    "el" '(eval-last-sexp :wk "Eval elisp expression before point")
-    "er" '(eval-region :wk "Eval elisp in region"))
+  ;; Elisp eval 
+  (leader-keys
+      "e" '(:ignore t :wk "Evaluate")
+      "eb" '(eval-buffer :wk "Eval elisp in buffer")
+      "ed" '(eval-defun :wk "Eval defun containing or after point")
+      "ee" '(eval-expression :wk "Eval an elisp expression")
+      "el" '(eval-last-sexp :wk "Eval elisp expression before point")
+      "er" '(eval-region :wk "Eval elisp in region"))
 
-;; Help (I need somebody :o)
-(leader-keys
-    "h" '(:ignore t :wk "Help")
-    "hf" '(describe-function :wk "Describe function")
-    "hv" '(describe-variable :wk "Describe variable")
-    "hrr" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Reload emacs config"))
+  ;; Help (I need somebody :o)
+  (leader-keys
+      "h" '(:ignore t :wk "Help")
+      "hf" '(describe-function :wk "Describe function")
+      "hv" '(describe-variable :wk "Describe variable")
+      "hrr" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Reload emacs config"))
 
-;; Window management
-(leader-keys
-    "w" '(:ignore t :wk "Window")
-    "wh" '(evil-window-left :wk "Window left")
-    "wj" '(evil-window-down :wk "Window down")
-    "wk" '(evil-window-up :wk "Window up")
-    "wl" '(evil-window-right :wk "Window right")
-    "wq" '(evil-window-delete :wk "Delete current window")
-    "wv" '(evil-window-vsplit :wk "Move to the left window")
-    "ws" '(evil-window-split :wk "Move to the left window"))
+  ;; Window management
+  (leader-keys
+      "w" '(:ignore t :wk "Window")
+      "wh" '(evil-window-left :wk "Window left")
+      "wj" '(evil-window-down :wk "Window down")
+      "wk" '(evil-window-up :wk "Window up")
+      "wl" '(evil-window-right :wk "Window right")
+      "wq" '(evil-window-delete :wk "Delete current window")
+      "wv" '(evil-window-vsplit :wk "Move to the left window")
+      "ws" '(evil-window-split :wk "Move to the left window"))
 
-;; Open stuff 
-(leader-keys
-    "o" '(:ignore t :wk "Open")
-    "ot" '(vterm-toggle :wk "Vterm toggle")
-    "op" '(treemacs :wk "treemacs"))
-)
+  ;; Open stuff 
+  (leader-keys
+      "o" '(:ignore t :wk "Open")
+      "ot" '(vterm-toggle :wk "Vterm toggle")
+      "op" '(treemacs :wk "treemacs"))
+  )
 
 (general-create-definer evil-keys
     :keymaps 'override
@@ -156,11 +160,6 @@
     :prefix "j"
     :states '(insert)
     "k" '(evil-normal-state :wk "Normal state"))
-
-(evil-keys
-    :states '(normal visual)
-    :prefix "g"
-    "cc" '(comment-line :wk "Comment line"))
 
 (use-package eshell-syntax-highlighting
     :after  esh-mode
@@ -250,6 +249,10 @@
   (ivy-set-display-transformer 'ivy-switch-buffer
                                'ivy-rich-switch-buffer-transformer))
 
+(use-package nerd-icons)
+(use-package doom-modeline)
+(doom-modeline-mode 1)
+
 (use-package magit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
 
@@ -318,9 +321,6 @@
     (leader-keys
         "fu" '(sudo-edit-find-file :wk "Sudo find file")
         "fU" '(sudo-edit :wk "Sudo edit this file")))
-
-(use-package treemacs)
-(use-package treemacs-evil)
 
 (use-package which-key
   :init

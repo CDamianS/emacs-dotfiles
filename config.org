@@ -10,22 +10,24 @@
   - [[#evil-mode-][Evil mode >:)]]
   - [[#all-the-icons][All the icons]]
   - [[#font-stuff][Font stuff]]
+  - [[#lsp][LSP]]
   - [[#gui][GUI]]
 - [[#general-keybindings][General Keybindings]]
   - [[#space][Space]]
   - [[#evil-special-keybinds][Evil special keybinds]]
 - [[#configurations][Configurations]]
+  - [[#dired][Dired]]
   - [[#shells][Shells]]
 - [[#more-plugins][More Plugins!!]]
   - [[#dashboard][Dashboard]]
   - [[#ivy][Ivy]]
+  - [[#mood-line][Mood-line]]
   - [[#magit][Magit]]
   - [[#language-support][Language Support]]
   - [[#org-mode][Org-Mode]]
   - [[#projectile][Projectile]]
   - [[#rainbow-mode][Rainbow mode]]
   - [[#sudo-edit][Sudo-edit]]
-  - [[#treemacs][Treemacs]]
   - [[#which-key][Which-key]]
 
 * Priorities
@@ -66,15 +68,14 @@ vi-vi-vi is the symbol of the beast!
    :config
    (setq evil-collection-mode-list '(org dashboard dired ibuffer magit))
    (evil-collection-init))
+
+(use-package evil-commentary)
+(evil-commentary-mode)
 #+END_SRC
 
 Why isn't this a default?
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-u") 'evil-scroll-up)
-#+end_src
-
-Why is this a default?
-#+begin_src emacs-lisp
 #+end_src
 
 ** All the icons
@@ -94,15 +95,15 @@ Because I really like fira
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'default nil
   :font "FiraCode Nerd Font"
-  :height 110
+  :height 140
   :weight 'medium)
 (set-face-attribute 'variable-pitch nil
   :font "Source Code Pro"
-  :height 110
+  :height 140
   :weight 'medium)
 (set-face-attribute 'fixed-pitch nil
   :font "FiraCode Nerd Font"
-  :height 110
+  :height 140
   :weight 'medium)
 #+END_SRC
 
@@ -128,6 +129,12 @@ Because client is wonky!!
 (setq-default line-spacing 0.12)
 #+END_SRC
 
+** LSP
+M-x vscode
+#+begin_src emacs-lisp
+(use-package lsp-mode)
+#+end_src
+
 ** GUI
 Because more is not always better
 
@@ -151,7 +158,8 @@ relative numbers or bust
 who needs C-v
 #+begin_src emacs-lisp
 (setq scroll-step            1
-      scroll-conservatively  10000)
+      scroll-conservatively  10000
+      scroll-margin 8)
 #+end_src
 
 *** Colorscheme
@@ -163,7 +171,7 @@ catppuccin is fun
    (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
    (straight-use-package 'catppuccin-theme)
    (load-theme 'catppuccin :no-confirm)
-  ;; (setq catppuccin-flavor 'macchiato) ;; or 'frappe, 'latte, or 'mocha
+  (setq catppuccin-flavor 'mocha) ;; or 'frappe, 'latte, or 'mocha
   ;; (catppuccin-reload)
 #+END_SRC
 
@@ -258,15 +266,10 @@ other keybinds may be on their specific configs
     :prefix "j"
     :states '(insert)
     "k" '(evil-normal-state :wk "Normal state"))
-
-(evil-keys
-    :states '(normal visual)
-    :prefix "g"
-    "cc" '(comment-line :wk "Comment line"))
-
 #+end_src
 
 * Configurations
+** Dired
 ** Shells
 *** Eshell
 #+begin_src emacs-lisp
@@ -374,6 +377,13 @@ Automated lazyness
   :config
   (ivy-set-display-transformer 'ivy-switch-buffer
                                'ivy-rich-switch-buffer-transformer))
+#+end_src
+
+** Mood-line
+#+begin_src emacs-lisp
+(use-package nerd-icons)
+(use-package doom-modeline)
+(doom-modeline-mode 1)
 #+end_src
 
 ** Magit
@@ -496,13 +506,6 @@ what's the magic word to get what you want?
     (leader-keys
         "fu" '(sudo-edit-find-file :wk "Sudo find file")
         "fU" '(sudo-edit :wk "Sudo edit this file")))
-#+end_src
-
-** Treemacs
-not for nerds
-#+begin_src emacs-lisp
-(use-package treemacs)
-(use-package treemacs-evil)
 #+end_src
 
 ** Which-key
