@@ -1,0 +1,155 @@
+#+title: Emacs Dotfiles
+#+author: Damian Suarez
+
+* Configs
+** Completion
+#+begin_src emacs-lisp
+(fido-vertical-mode)
+(define-key icomplete-minibuffer-map (kbd "TAB") 'icomplete-force-complete)
+(use-package savehist :init (savehist-mode))
+(use-package marginalia
+  :ensure t
+  :init (marginalia-mode))
+#+end_src
+
+** UI
+#+begin_src emacs-lisp
+(scroll-bar-mode -1)
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(pixel-scroll-precision-mode 1)
+(pixel-scroll-mode 1)
+(setq scroll-step 1
+      scroll-conservatively 10000
+      scroll-margin 8)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(set-frame-parameter nil 'alpha-background 70)
+(add-to-list 'default-frame-alist '(alpha-background . 70))
+(add-to-list 'default-frame-alist '(font . "FiraCode Nerd Font-12"))
+#+end_src
+
+** Extras
+*** Melpa
+#+begin_src emacs-lisp
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+#+end_src
+
+** Shortcuts
+#+begin_src emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+(electric-pair-mode)
+(setq electric-pair-inhibit-predicate (lambda (c) (char-equal c ?\<)))
+#+end_src
+
+** Configs
+#+begin_src emacs-lisp
+(require 'org-tempo)
+(electric-indent-mode 1)
+(setq org-src-preserve-indentation t
+      org-startup-with-inline-images t)
+(setq create-lockfiles nil
+      backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
+#+end_src
+
+* Packages
+** Colorscheme
+#+begin_src emacs-lisp
+(use-package catppuccin-theme
+  :ensure t
+  :config (setq catppuccin-flavor 'mocha)
+  :init (load-theme 'catppuccin :noconfirm))
+#+end_src
+
+** Completion
+#+begin_src emacs-lisp
+(use-package all-the-icons-completion
+  :ensure t
+  :config (all-the-icons-completion-mode))
+#+end_src
+
+** Corfu
+#+begin_src emacs-lisp
+(use-package corfu
+  :ensure t
+  :config
+  (setq corfu-auto t)
+  (global-corfu-mode))
+#+end_src
+
+** Dashboard
+#+begin_src emacs-lisp
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+  (setq dashboard-items '((recents  . 3) (projects . 2))
+	dashboard-footer-messages '("TQMR")
+	dashboard-center-content t
+	initial-buffer-choice 'dashboard-open
+	dashboard-banner-logo-title nil
+	dashboard-startup-banner "~/.config/emacs/logo-small.xpm"))
+#+end_src
+
+** Dired
+#+begin_src emacs-lisp
+(use-package dirvish
+  :ensure t
+  :config (dirvish-override-dired-mode))
+
+(use-package all-the-icons-dired
+  :ensure t
+  :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
+#+end_src
+
+** EAT
+#+begin_src emacs-lisp
+(use-package eat :ensure t)
+#+end_src
+
+** Org-bullets
+#+begin_src emacs-lisp
+(use-package org-bullets
+  :ensure t
+  :hook ((org-mode . org-indent-mode)
+	     (org-mode . (lambda () (org-bullets-mode 1)))))
+#+end_src
+
+** Rainbow Delimiters
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters 
+  :ensure t
+  :hook prog-mode org-mode)
+#+end_src
+
+** Magit
+#+begin_src emacs-lisp
+(use-package magit :ensure t)
+#+end_src
+
+** Modeline
+#+begin_src emacs-lisp
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
+#+end_src
+
+* Keybinds
+#+begin_src emacs-lisp
+(defun open-config ()
+  "Open configuration file"
+  (interactive)
+  (find-file "~/.config/emacs/README.org"))
+
+(global-set-key (kbd "C-c o c") #'open-config)
+#+end_src
+
+* Languages
+Code here will be a mess so it's at the end
+#+begin_src emacs-lisp
+(use-package go-mode :ensure t)
+(use-package sly
+  :ensure t
+  :config (setq inferior-lisp-program "ros -Q run"))
+(use-package emmet-mode :ensure t
+  :hook (html-mode . emmet-mode))
+#+end_src
