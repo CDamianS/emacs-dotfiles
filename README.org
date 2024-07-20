@@ -7,6 +7,9 @@
 (fido-vertical-mode)
 (define-key icomplete-minibuffer-map (kbd "TAB") 'icomplete-force-complete)
 (use-package savehist :init (savehist-mode))
+(use-package consult
+  :ensure t
+  :config(advice-add #'project-find-regexp :override #'consult-ripgrep))
 (use-package marginalia
   :ensure t
   :init (marginalia-mode))
@@ -123,7 +126,10 @@
 
 ** Magit
 #+begin_src emacs-lisp
-(use-package magit :ensure t)
+(use-package magit
+  :ensure t
+  :config
+  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
 #+end_src
 
 ** Modeline
